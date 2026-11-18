@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+
+# Build output / caches (regenerable)
+dist/
+dist-web/
+web-build/
+.expo/
+expo-env.d.ts
+*.tsbuildinfo
+.metro-health-check*
+
+# Native build artifacts & signing material
+.kotlin/
+ios/
+android/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+*.orig.*
+
+# Generated media / render caches (regenerable)
+seam-video/renders/
+seam-video/.hyperframes/
+seam-video/.waveform-cache/
+seam-slides/preview/
+
+# Local env & secrets
+.env
+.env.*
+!.env.example
+
+# Local tool settings
+.claude/settings.local.json
+
+# Logs
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Hackathon private profile
+/devpost/learner-profile.md
+
+# Misc
+*.tmp

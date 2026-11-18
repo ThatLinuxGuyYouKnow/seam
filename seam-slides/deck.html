@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Seam Deck</title>
+<style>
+  @font-face {
+    font-family: "InterVar";
+    src: url("assets/InterVariable.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: block;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #0b0d0c; }
+  body { font-family: "InterVar", Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+  @page { size: 1920px 1080px; margin: 0; }
+
+  .slide {
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+    color: #f4ede1;
+    background:
+      radial-gradient(1000px 700px at 50% 40%, #16201a 0%, transparent 62%),
+      radial-gradient(800px 600px at 85% 105%, #2b1f08 0%, transparent 60%),
+      #0b0d0c;
+    padding: 96px 120px 84px;
+    display: flex;
+    flex-direction: column;
+  }
+  .slide::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .07;
+    background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px);
+    background-size: 80px 80px;
+    -webkit-mask-image: radial-gradient(1100px 750px at 50% 50%, #000 25%, transparent 78%);
+            mask-image: radial-gradient(1100px 750px at 50% 50%, #000 25%, transparent 78%);
+    pointer-events: none;
+  }
+  .slide > * { position: relative; }
+
+  /* ---------- shared type ---------- */
+  .kicker {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: #f5a623;
+    margin-bottom: 34px;
+  }
+  h1 { font-size: 128px; font-weight: 850; line-height: 1.02; letter-spacing: -.03em; }
+  h2 { font-size: 88px; font-weight: 820; line-height: 1.06; letter-spacing: -.025em; margin-bottom: 30px; }
+  h2 em, h1 em { font-style: normal; color: #f5a623; }
+  .lead { font-size: 46px; line-height: 1.38; color: #cdc6ba; max-width: 1560px; }
+  .foot {
+    position: absolute; left: 120px; right: 120px; bottom: 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 30px; color: #8d887e; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .foot .brand { color: #b8b2a6; font-weight: 700; }
+
+  /* ---------- cards ---------- */
+  .cards { display: flex; gap: 40px; margin-top: 44px; }
+  .card {
+    flex: 1;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(245,166,35,.28);
+    border-radius: 26px;
+    padding: 36px 38px 42px;
+  }
+  .card .no {
+    font-size: 40px; font-weight: 850; color: #0b0d0c; background: #f5a623;
+    width: 74px; height: 74px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 26px;
+  }
+  .card h3 { font-size: 46px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 16px; }
+  .card p  { font-size: 38px; line-height: 1.32; color: #b8b2a6; }
+
+  /* ---------- flow (slide 5) ---------- */
+  .flow { display: flex; align-items: stretch; gap: 26px; margin-top: 40px; }
+  .flow .box {
+    flex: 1; background: rgba(255,255,255,.045);
+    border: 1px solid rgba(245,166,35,.28); border-radius: 26px;
+    padding: 30px 30px 34px; display: flex; flex-direction: column;
+  }
+  .flow .box .tag {
+    font-size: 27px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+    color: #f5a623; margin-bottom: 16px; white-space: nowrap;
+  }
+  .flow .box h3 { font-size: 42px; font-weight: 820; letter-spacing: -.02em; margin-bottom: 14px; }
+  .flow .box p  { font-size: 34px; line-height: 1.3; color: #b8b2a6; }
+  .flow .arrow {
+    display: flex; align-items: center; font-size: 56px; color: #f5a623; font-weight: 800;
+  }
+  .flow-notes { display: flex; gap: 28px; margin-top: 30px; flex-wrap: wrap; }
+  .flow-notes span {
+    font-size: 34px; color: #cdc6ba; background: rgba(245,166,35,.12);
+    border: 1px solid rgba(245,166,35,.3); border-radius: 999px; padding: 12px 30px;
+  }
+
+  /* ---------- two-column with phone ---------- */
+  .split { display: flex; gap: 90px; flex: 1; align-items: center; min-height: 0; }
+  .split .txt { flex: 1; min-width: 0; }
+  .steps { list-style: none; margin-top: 40px; }
+  .steps li {
+    display: flex; gap: 30px; align-items: flex-start;
+    font-size: 43px; line-height: 1.34; color: #cdc6ba; margin-bottom: 34px;
+  }
+  .steps li b { color: #f4ede1; font-weight: 750; }
+  .steps .n {
+    flex: none; width: 62px; height: 62px; border-radius: 50%;
+    background: #f5a623; color: #0b0d0c; font-weight: 850; font-size: 34px;
+    display: flex; align-items: center; justify-content: center; margin-top: 4px;
+  }
+  .pill {
+    display: inline-block; font-size: 36px; font-weight: 750; color: #f5a623;
+    background: rgba(245,166,35,.12); border: 1px solid rgba(245,166,35,.35);
+    border-radius: 999px; padding: 16px 38px; margin-top: 14px;
+  }
+  .phone {
+    flex: none; width: 420px; padding: 16px; border-radius: 46px;
+    background: #000; border: 3px solid rgba(245,166,35,.4);
+    box-shadow: 0 40px 90px rgba(0,0,0,.65);
+  }
+  .phone img { display: block; width: 100%; border-radius: 32px; }
+
+  /* ---------- misc ---------- */
+  .badge {
+    display: inline-flex; gap: 26px; margin-top: 54px;
+  }
+  .badge span {
+    font-size: 36px; font-weight: 750; color: #f4ede1;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(244,237,225,.22);
+    border-radius: 999px; padding: 16px 38px;
+  }
+  .cols { display: flex; gap: 60px; margin-top: 36px; flex: 1; min-height: 0; }
+  .col {
+    flex: 1; background: rgba(255,255,255,.045); border: 1px solid rgba(245,166,35,.28);
+    border-radius: 26px; padding: 38px 42px;
+  }
+  .col h3 {
+    font-size: 42px; font-weight: 820; letter-spacing: .14em; text-transform: uppercase;
+    color: #f5a623; margin-bottom: 24px;
+  }
+  .col ul { list-style: none; }
+  .col li {
+    font-size: 38px; line-height: 1.3; color: #cdc6ba; margin-bottom: 20px;
+    padding-left: 44px; position: relative;
+  }
+  .col li::before {
+    content: "→"; position: absolute; left: 0; color: #f5a623; font-weight: 800;
+  }
+  .cmd {
+    display: block; font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 40px; color: #f5a623; background: #000;
+    border: 1px solid rgba(245,166,35,.35); border-radius: 18px;
+    padding: 22px 36px; margin-top: 28px; letter-spacing: -.01em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 1 · TITLE ============ -->
+<section class="slide">
+  <div class="kicker">Dakar Bitcoin Hack 2026 · BTrust · Bitcoin / Lightning / Nostr</div>
+  <h1>Seam. <em>Money<br>without bars.</em></h1>
+  <p class="lead" style="margin-top:44px;">
+    A low-bandwidth remittance bridge: Lightning in, Cashu ecash out.
+    Then send it anywhere text goes, even to someone who is offline right now.
+  </p>
+  <div class="badge">
+    <span>Working MVP</span>
+    <span>Open source</span>
+    <span>Runs fully offline</span>
+    <span>No backend of ours</span>
+  </div>
+  <div class="foot"><span class="brand">Seam</span><span>01 / 10</span></div>
+</section>
+
+<!-- ============ 2 · PROBLEM ============ -->
+<section class="slide">
+  <div class="kicker">The problem</div>
+  <h2>Internet fails. <em>Money shouldn't.</em></h2>
+  <p class="lead">Expensive data and spotty 3G/4G make regular Lightning wallets fail mid-payment, and the receiver must be online right then.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="no">1</div>
+      <h3>Data is expensive</h3>
+      <p>Every retry, every failed payment burns scarce airtime.</p>
+    </div>
+    <div class="card">
+      <div class="no">2</div>
+      <h3>3G drops mid-payment</h3>
+      <p>A wallet that loses signal halfway leaves your sats stuck.</p>
+    </div>
+    <div class="card">
+      <div class="no">3</div>
+      <h3>Receiver must be online</h3>
+      <p>Signal, a smartphone and a funded wallet right now.</p>
+    </div>
+  </div>
+  <div class="foot"><span class="brand">Seam</span><span>02 / 10</span></div>
+</section>
+
+<!-- ============ 3 · WHY WALLETS FAIL ============ -->
+<section class="slide">
+  <div class="kicker">Why today's wallets break here</div>
+  <h2>Both ends must be online. <em>And stay online.</em></h2>
+  <div class="cards">
+    <div class="card">
+      <div class="no">1</div>
+      <h3>Always-on assumption</h3>
+      <p>Retries burn data, and a dropped connection mid-payment strands the sats.</p>
+    </div>
+    <div class="card">
+      <div class="no">2</div>
+      <h3>Receiver online now</h3>
+      <p>They need a smartphone, a wallet and signal at this exact moment.</p>
+    </div>
+    <div class="card">
+      <div class="no">3</div>
+      <h3>Tiny amounts</h3>
+      <p>Fees and friction eat transport fares and market payments.</p>
+    </div>
+  </div>
+  <p class="lead" style="margin-top:32px;">Seam only needs the <b style="color:#f5a623;">sender</b> online, briefly.</p>
+  <div class="foot"><span class="brand">Seam</span><span>03 / 10</span></div>
+</section>
+
+<!-- ============ 4 · SOLUTION ============ -->
+<section class="slide">
+  <div class="kicker">The solution</div>
+  <h2>Swap sats for bytes. <em>Send the bytes.</em></h2>
+  <div class="cards">
+    <div class="card">
+      <div class="no">1</div>
+      <h3>Mint</h3>
+      <p>Lightning → Cashu. You get a bearer token just a few hundred bytes long.</p>
+    </div>
+    <div class="card">
+      <div class="no">2</div>
+      <h3>Send</h3>
+      <p>Hand it over Nostr DM (NIP-17), SMS, WhatsApp, or an offline QR, anywhere text goes.</p>
+    </div>
+    <div class="card">
+      <div class="no">3</div>
+      <h3>Claim</h3>
+      <p>The recipient imports it and melts back to Lightning when they reconnect.</p>
+    </div>
+  </div>
+  <p class="lead" style="margin-top:32px;">The recipient needs <em>zero internet</em> until they claim.</p>
+  <div class="foot"><span class="brand">Seam</span><span>04 / 10</span></div>
+</section>
+
+<!-- ============ 5 · HOW IT WORKS ============ -->
+<section class="slide">
+  <div class="kicker">Under the hood</div>
+  <h2>Cashu ecash + Nostr. <em>No server of ours.</em></h2>
+  <div class="flow">
+    <div class="box">
+      <div class="tag">1 · Mint</div>
+      <h3>Lightning ⇄ Cashu</h3>
+      <p>Online, brief. The mint signs blind signatures. Testnet by default.</p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="box">
+      <div class="tag">2 · Token</div>
+      <h3>~300-byte bearer note</h3>
+      <p>A compact <b style="color:#f4ede1;">cashuB…</b> token that fits in one or two SMS segments.</p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="box">
+      <div class="tag">3 · Channels</div>
+      <h3>DM · SMS · QR</h3>
+      <p>NIP-17 gift-wrapped Nostr DM, WhatsApp, plain SMS, or an offline QR code.</p>
+    </div>
+    <div class="arrow">→</div>
+    <div class="box">
+      <div class="tag">4 · Claim</div>
+      <h3>Melt → Lightning</h3>
+      <p>Recipient imports the token and claims Lightning when reconnected.</p>
+    </div>
+  </div>
+  <div class="flow-notes">
+    <span>Outbox retries failed DMs</span>
+    <span>nsec stays in SecureStore</span>
+    <span>One relay · no images</span>
+  </div>
+  <div class="foot"><span class="brand">Seam</span><span>05 / 10</span></div>
+</section>
+
+<!-- ============ 6 · STEP 1 MINT ============ -->
+<section class="slide">
+  <div class="split">
+    <div class="txt">
+      <div class="kicker">How to use · step 1</div>
+      <h2><em>Mint</em>: top up in one tap</h2>
+      <ol class="steps">
+        <li><span class="n">1</span><span>Open <b>Mint</b>, enter an amount, try <b>100 sats</b>, and add a memo.</span></li>
+        <li><span class="n">2</span><span>Tap <b>“Mint 100 sats (demo)”</b> and your balance updates instantly.</span></li>
+        <li><span class="n">3</span><span>Demo OFF? You get a real <b>Lightning invoice + QR</b> on testnet.</span></li>
+      </ol>
+      <div class="pill">Demo mode: instant · offline · zero sats</div>
+    </div>
+    <div class="phone"><img src="assets/mint.png" alt="Seam mint screen: amount 100 sats, Mint demo button, balance 100 sats"></div>
+  </div>
+  <div class="foot"><span class="brand">Seam</span><span>06 / 10</span></div>
+</section>
+
+<!-- ============ 7 · STEP 2 SEND ============ -->
+<section class="slide">
+  <div class="split">
+    <div class="txt">
+      <div class="kicker">How to use · step 2</div>
+      <h2><em>Send</em>: seal it, pick a channel</h2>
+      <ol class="steps">
+        <li><span class="n">1</span><span>Enter an amount and a memo, then <b>“seal the token”</b>.</span></li>
+        <li><span class="n">2</span><span>Share it: <b>Nostr DM</b>, show the <b>QR</b>, or copy the text into <b>SMS / WhatsApp</b>.</span></li>
+        <li><span class="n">3</span><span>No signal? Failed DMs wait in the <b>outbox</b> and retry on reconnect.</span></li>
+      </ol>
+      <div class="pill">Token ≈ 200–400 bytes. It's just text</div>
+    </div>
+    <div class="phone"><img src="assets/send.png" alt="Seam send screen: 50 sats, memo, seal token button, QR and share options"></div>
+  </div>
+  <div class="foot"><span class="brand">Seam</span><span>07 / 10</span></div>
+</section>
+
+<!-- ============ 8 · STEP 3 RECEIVE ============ -->
+<section class="slide">
+  <div class="split">
+    <div class="txt">
+      <div class="kicker">How to use · step 3</div>
+      <h2><em>Receive</em>: claim when you reconnect</h2>
+      <ol class="steps">
+        <li><span class="n">1</span><span>Pull the <b>Nostr inbox</b>, paste the SMS text, or <b>scan the QR</b>, even offline.</span></li>
+        <li><span class="n">2</span><span>Tap <b>Claim</b> and the balance appears on their phone.</span></li>
+        <li><span class="n">3</span><span><b>Melt back to Lightning</b> whenever they need it live.</span></li>
+      </ol>
+      <div class="pill">Zero internet needed until claim time</div>
+    </div>
+    <div class="phone"><img src="assets/receive.png" alt="Seam receive screen: paste token or scan QR, claim button, balance"></div>
+  </div>
+  <div class="foot"><span class="brand">Seam</span><span>08 / 10</span></div>
+</section>
+
+<!-- ============ 9 · DEMO MODE & RUN IT ============ -->
+<section class="slide">
+  <div class="split">
+    <div class="txt">
+      <div class="kicker">Demo mode &amp; low bandwidth</div>
+      <h2>Runs fully offline. <em>Zero sats required.</em></h2>
+      <ol class="steps">
+        <li><span class="n">1</span><span><b>Demo ON by default</b>: instant offline minting. Judges need no funds and no network.</span></li>
+        <li><span class="n">2</span><span><b>Low-bandwidth mode</b>: one relay, minimal polling, no images.</span></li>
+        <li><span class="n">3</span><span>Live mode: testnet mint <b>testnut.cashu.space</b>, no real funds.</span></li>
+      </ol>
+      <code class="cmd">cd seam-app && npx expo start --web</code>
+    </div>
+    <div class="phone"><img src="assets/settings.png" alt="Seam settings screen: demo mode toggle, low-bandwidth relays, identity backup"></div>
+  </div>
+  <div class="foot"><span class="brand">Seam</span><span>09 / 10</span></div>
+</section>
+
+<!-- ============ 10 · IMPACT & NEXT ============ -->
+<section class="slide">
+  <div class="kicker">Impact &amp; what's next</div>
+  <h2>Money <em>without bars.</em></h2>
+  <div class="cols">
+    <div class="col">
+      <h3>Why it matters</h3>
+      <ul>
+        <li>Market sellers, transport fares, family remittance in Dakar</li>
+        <li>Runs on the cheapest Android phones, with a web fallback for judges</li>
+        <li>~300-byte tokens ride SMS on 2G</li>
+        <li>One command to run, demo mode needs zero setup</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>What's next</h3>
+      <ul>
+        <li>NWC wallet connection (Alby / LNbits)</li>
+        <li>Persistent proof wallet + one-tap melt</li>
+        <li>P2PK-locked tokens</li>
+        <li>Hausa / Wolof / French copy</li>
+      </ul>
+    </div>
+  </div>
+  <div class="badge" style="margin-top:32px;">
+    <span>Seam · Dakar Bitcoin Hack 2026</span>
+    <span>Open source (MIT)</span>
+    <span>Lightning · Cashu · Nostr</span>
+  </div>
+  <div class="foot"><span class="brand">Seam</span><span>10 / 10</span></div>
+</section>
+
+</body>
+</html>
