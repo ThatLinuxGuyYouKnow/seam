@@ -25,6 +25,20 @@ npx serve -s dist      # serve locally; on a phone open the URL and "Add to Home
 
 Host `dist/` on any static host (HTTPS) and judges install it like a native app.
 
+### Deploy to Vercel (repo is pre-configured)
+
+`vercel.json` lives at the repo root (and a copy inside `seam-app/`), so either
+Root Directory setting works:
+
+- Root Directory `./` (repo root): install `npm --prefix seam-app ci`,
+  build `npm --prefix seam-app run build:web`, output `seam-app/dist`.
+- Root Directory `seam-app`: build `npm run build:web`, output `dist`.
+
+Both set SPA fallbacks for `/mint` `/send` `/receive` `/settings`, no-cache for
+`sw.js`, and immutable caching for hashed `_expo/static` assets.
+In the Vercel dashboard set **Node.js Version to 22.x** (Expo SDK 58 requires
+Node >= 22.13). Then redeploy — no dashboard build settings needed.
+
 Defaults: mint `https://testnut.cashu.space` (testnet, no real funds),
 relays `relay.damus.io, nos.lol, relay.nostr.band` (low-bandwidth mode: first only).
 
