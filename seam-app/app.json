@@ -1,9 +1,10 @@
 {
   "expo": {
-    "name": "seam-app",
-    "slug": "seam-app",
+    "name": "Seam",
+    "slug": "seam",
     "scheme": "seam",
     "version": "1.0.0",
+    "description": "Low-bandwidth Cashu and Nostr remittance. Mint Lightning to ecash, send offline, claim on reconnect.",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,7 +21,18 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "output": "single",
+      "favicon": "./assets/favicon.png",
+      "name": "Seam",
+      "shortName": "Seam",
+      "lang": "en",
+      "description": "Low-bandwidth Cashu and Nostr remittance. Mint Lightning to ecash, send offline, claim on reconnect.",
+      "themeColor": "#0B0B0F",
+      "backgroundColor": "#0B0B0F",
+      "display": "standalone",
+      "orientation": "portrait",
+      "startUrl": ".",
+      "scope": "."
     },
     "plugins": [
       "expo-router",

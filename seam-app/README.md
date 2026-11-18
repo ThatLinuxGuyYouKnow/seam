@@ -7,11 +7,23 @@ Expo SDK 58 · React Native + Web · TypeScript · Expo Router.
 
 ```bash
 npm install
-npx expo start --web   # browser (judge-friendly, no phone needed)
+npx expo start --web   # browser dev (judge-friendly, no phone needed)
 npx expo start         # scan QR with Expo Go for Android/iOS
 npx tsc --noEmit       # typecheck
 npx expo lint          # lint
 ```
+
+## PWA (no APK needed for judges)
+
+The web build is an installable offline-capable PWA (`public/manifest.json` +
+Workbox service worker, icons in `public/`).
+
+```bash
+npm run build:web      # exports to dist/ + generates dist/sw.js precache
+npx serve -s dist      # serve locally; on a phone open the URL and "Add to Home Screen"
+```
+
+Host `dist/` on any static host (HTTPS) and judges install it like a native app.
 
 Defaults: mint `https://testnut.cashu.space` (testnet, no real funds),
 relays `relay.damus.io, nos.lol, relay.nostr.band` (low-bandwidth mode: first only).
